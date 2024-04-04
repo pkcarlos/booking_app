@@ -4,14 +4,6 @@
 
 // Assume that only one schedule at a time can be booked.
 
-// Select schedulen from dropdown
-  // populate SELECT A SCHEDULE with all available schedules in the following format: staff_name | date | time
-  // get all available schedules
-  // filter schedules with student_email of null
-  // iterate through filtered schedules
-    // create option for drop down in specified format
-    // insert option as child of select element
-
 // Email validation
 
 // Provide new student details
@@ -23,12 +15,30 @@ document.addEventListener('DOMContentLoaded', () => {
   xhr.responseType = 'json';
   xhr.send();
 
-  function addOption() {
-    let text = `${sched.staff_id} | ${sched.date} | ${sched.time}`;
-    let value;
-    let option = new Option(text);
+  function changeStaffIdToName(schedule, option) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/staff_members');
+    xhr.responseType = 'json';
+    xhr.send();
 
-    let select = document.querySelector('select').
+    let [staffId, date, time] = [schedule.staff_id, schedule.date, schedule.time];
+
+    xhr.addEventListener('load', () => {
+      let staff = xhr.response;
+      let staffMember = staff.find(member => member.id === Number(staffId));
+      option.textContent = `${staffMember.name} | ${date} | ${time}`;
+    })
+  }
+
+  function addOption(sched) {
+    let text = '';
+    let value = sched.id;
+    let option = new Option(text, value);
+    let select = document.querySelector('select');
+
+    changeStaffIdToName(sched, option);
+    select.appendChild(option);
+    console.log(option);
   }
 
   xhr.addEventListener('load', () => {
@@ -36,10 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let availableSchedules = allSchedules.filter(sched => sched.student_email === null);
 
     availableSchedules.forEach(sched => {
-      // create and insert new option
-      addOption();
-
-
+      addOption(sched);
     })
   })
 

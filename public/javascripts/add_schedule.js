@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   // request staff members
-  let staff;
-
   let request = new XMLHttpRequest();
   request.open('GET', '/api/staff_members');
   request.responseType = 'json';
@@ -9,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // add options to staff dropdown
   request.addEventListener('load', () => {
-    staff = request.response;
+    let staff = request.response;
 
     staff.forEach(member => {
       let select = document.querySelector('select');
