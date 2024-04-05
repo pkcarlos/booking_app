@@ -47,9 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // submitting timeslot form
-  let submitButton = document.getElementById('book_timeslot');
+  let submitBookTimeslot = document.getElementById('book_timeslot');
 
-  submitButton.addEventListener('submit', e => {
+  submitBookTimeslot.addEventListener('submit', e => {
     e.preventDefault();
 
     // request all registered students
@@ -93,6 +93,16 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   })
 
-  // Provide new student details
-  
+  // add student to database with provided student details
+    // 
+  // automatically book the timeslot
+
+  let submitNewStudent = document.getElementById('new_student');
+
+  submitNewStudent.addEventListener('submit', e => {
+    e.preventDefault();
+
+
+  })
+
 })
