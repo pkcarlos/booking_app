@@ -53,10 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
   submitBookTimeslot.addEventListener('submit', e => {
     e.preventDefault();
 
-    // try to book timeslot with id and student email
-    // if success, great
-    // if not, take book sequence from response, save to variable, and unhide form
-
     function getBookingSequence() {
       const regex = /\d+/g;
       let response = xhr.response;
@@ -89,58 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('sequence').value = bookingSequence;
       }
     })
-
-    // // request all registered students
-    // let xhr = new XMLHttpRequest();
-    // xhr.open('GET', '/api/students');
-    // xhr.responseType = 'json';
-    // xhr.send();
-
-    // let emailInput = document.getElementById('email').value.trim();
-
-    // xhr.addEventListener('load', () => {
-    //   function bookTimeslot() {
-    //     let select = document.getElementById('schedule');
-    //     scheduleId = Number(select.value);
-    //     studentEmail = emailInput;
-
-    //     let xhr = new XMLHttpRequest();
-    //     xhr.open('POST', '/api/bookings');
-    //     xhr.setRequestHeader('Content-Type', 'application/json');
-    //     let data = JSON.stringify({'id': scheduleId, 'student_email': studentEmail});
-    //     xhr.send(data);
-
-    //     xhr.addEventListener('load', () => {
-    //       if (xhr.status === 204) {
-    //         alert('Timeslot booked!');
-    //       } else {
-    //         alert('Error with booking timeslot. Please try again.');
-    //       }
-    //     })
-    //   }
-
-    //   let allStudents = xhr.response;
-      
-    //   if (allStudents.find(stud => stud.email === emailInput)) {
-    //     bookTimeslot();
-    //   } else {
-    //     // unhide form
-    //     let form = document.getElementById('new_student');
-    //     form.hidden = false;
-
-    //     // email auto-populate
-    //     document.getElementById('add_email').value = emailInput;
-    //   }
-    // })
   })
-
-  // add student to database with provided student details
-    // get data (need email, name, booking_sequence)
-      // get email ... user's email input
-      // get name ... student name
-        // request all students, find student name with email equal to email input
-      // get booking sequence (part of payload in server response from first form if email doesn't exist for registered student)
-    // send data to add student to database
 
   // automatically book the timeslot on submit
 
@@ -165,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     xhr.send(data);
 
     xhr.addEventListener('load', () => {
-      alert('success!');
+      // book timeslot
     })
   })
 })
