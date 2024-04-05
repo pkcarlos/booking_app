@@ -13,7 +13,7 @@
       <h1>Book a Timeslot</h1>
     </header>
     <div>
-      <form id="book_slot" method="post" action="/api/bookings">
+      <form id="book_timeslot" method="post" action="/api/bookings">
         <div>
           <label for="select_schedule">Select a schedule:</label>
           <select name="id" id="schedule"></select>
@@ -22,21 +22,29 @@
           <label for="email">Email:</label>
           <input name="email" id="email">
         </div>
+        <input type="submit" value="Submit" id="submit_timeslot">
       </form>
+
     </div>
-      <form id="new_student" method="post" action="/api/students">
+      <form id="new_student" method="post" action="/api/students" hidden="true">
         <h2>Provide new student details</h2>
 
-        <label for="add_email">Email:</label>
-        <input type="text" id="add_email" name="add_email">
+        <div>
+          <label for="add_email">Email:</label>
+          <input type="text" id="add_email" name="add_email">
+        </dive>
 
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name">
+        <div>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name">
+        </div>
 
-        <label for="booking_sequence">Booking Sequence:</label>
-        <input type="text" id="sequence" name="sequence" value="#">
+        <div>
+          <label for="booking_sequence">Booking Sequence:</label>
+          <input type="text" id="sequence" name="sequence" value="#">
+        </div>
 
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" id="submit_details">
       </form>
     <div>
 

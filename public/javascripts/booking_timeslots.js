@@ -4,17 +4,7 @@
 
 // Assume that only one schedule at a time can be booked.
 
-// Email validation
-
-// Provide new student details
-
 document.addEventListener('DOMContentLoaded', () => {
-  // get available schedules
-  let xhr = new XMLHttpRequest();
-  xhr.open('GET', '/api/schedules');
-  xhr.responseType = 'json';
-  xhr.send();
-
   function changeStaffIdToName(schedule, option) {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/api/staff_members');
@@ -38,9 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     changeStaffIdToName(sched, option);
     select.appendChild(option);
-    console.log(option);
   }
 
+  // request all schedules
+  let xhr = new XMLHttpRequest();
+  xhr.open('GET', '/api/schedules');
+  xhr.responseType = 'json';
+  xhr.send();
+
+  // dropdown timeslot selection
   xhr.addEventListener('load', () => {
     let allSchedules = xhr.response;
     let availableSchedules = allSchedules.filter(sched => sched.student_email === null);
@@ -50,5 +46,53 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   })
 
+  // submitting timeslot form
+  let submitButton = document.getElementById('book_timeslot');
 
+  submitButton.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // request all registered students
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/students');
+    xhr.responseType = 'json';
+    xhr.send();
+
+    let emailInput = document.getElementById('email').value.trim();
+
+    xhr.addEventListener('load', () => {
+      function bookTimeslot() {
+        let select = document.getElementById('schedule');
+        scheduleId = Number(select.value);
+        studentEmail = emailInput;
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/bookings');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        let data = JSON.stringify({'id': scheduleId, 'student_email': studentEmail});
+        xhr.send(data);
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status === 204) {
+            alert('Timeslot booked!')
+          } else {
+            alert('Error with booking timeslot. Please try again.');
+          }
+        })
+      }
+
+      let allStudents = xhr.response;
+      
+      if (allStudents.find(stud => stud.email === emailInput)) {
+        bookTimeslot();
+      } else {
+        // unhide form
+        let form = document.getElementById('new_student');
+        form.hidden = false;
+      }
+    })
+  })
+
+  // Provide new student details
+  
 })
