@@ -13,7 +13,7 @@
       <h1>Book a Timeslot</h1>
     </header>
     <div>
-      <form id="book_timeslot" method="post" action="/api/bookings">
+      <form id="book_timeslot">
         <div>
           <label for="select_schedule">Select a schedule:</label>
           <select name="id" id="schedule"></select>
@@ -24,8 +24,9 @@
         </div>
         <input type="submit" value="Submit" id="submit_timeslot">
       </form>
-
     </div>
+
+    <div>
       <form id="new_student" method="post" action="/api/students" hidden="true">
         <h2>Provide new student details</h2>
 
@@ -46,8 +47,6 @@
 
         <input type="submit" value="Submit" id="submit_details">
       </form>
-    <div>
-
     </div>
   </body>
 </html>

@@ -1,9 +1,3 @@
-// Implement the markup and JavaScript for booking a schedule. Be sure to check out the documentation on the requirements for a booking.
-
-// In the event that the student who's booking the appointment isn't in the database, you must provide a way for the user to create the student, and then automatically proceed with the booking once the student is successfully created.
-
-// Assume that only one schedule at a time can be booked.
-
 document.addEventListener('DOMContentLoaded', () => {
   function changeStaffIdToName(schedule, option) {
     let xhr = new XMLHttpRequest();
@@ -30,25 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
     select.appendChild(option);
   }
 
-  // request all schedules
-  let xhr = new XMLHttpRequest();
-  xhr.open('GET', '/api/schedules');
-  xhr.responseType = 'json';
-  xhr.send();
-
-  // dropdown timeslot selection
-  xhr.addEventListener('load', () => {
-    let allSchedules = xhr.response;
-    let availableSchedules = allSchedules.filter(sched => sched.student_email === null);
-
-    availableSchedules.forEach(sched => {
-      addOption(sched);
+  // create timeslot dropdown
+  function populateScheduleDropdown() {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/schedules');
+    xhr.responseType = 'json';
+    xhr.send();
+  
+    xhr.addEventListener('load', () => {
+      let allSchedules = xhr.response;
+      let availableSchedules = allSchedules.filter(sched => sched.student_email === null);
+  
+      availableSchedules.forEach(sched => {
+        addOption(sched);
+      })
     })
-  })
+  }
 
-  // submitting timeslot form
+  populateScheduleDropdown();
+
+  // book timeslot
   let submitBookTimeslot = document.getElementById('book_timeslot');
-  let bookingSequence;
 
   submitBookTimeslot.addEventListener('submit', e => {
     e.preventDefault();
@@ -73,8 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
     xhr.addEventListener('load', () => {
       if (xhr.status === 204) {
         alert('Timeslot booked!');
+        window.location.reload();
       } else {
-        bookingSequence = getBookingSequence();
+        alert(`${xhr.responseText}`);
+        let bookingSequence = getBookingSequence();
 
         // unhide details form
         let form = document.getElementById('new_student');
@@ -88,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // automatically book the timeslot on submit
-
   let submitNewStudent = document.getElementById('new_student');
 
   submitNewStudent.addEventListener('submit', e => {
@@ -106,11 +103,36 @@ document.addEventListener('DOMContentLoaded', () => {
     xhr.open('POST', '/api/students');
     xhr.setRequestHeader('Content-Type', 'application/json');
     
-    let data = configureStudentData();
+    let data = JSON.stringify(configureStudentData());
     xhr.send(data);
 
     xhr.addEventListener('load', () => {
-      // book timeslot
+      if (xhr.status === 201) {
+        alert(xhr.responseText);
+
+        // if adding student successful, book timeslot
+        let emailInput = document.getElementById('email').value.trim();
+        let select = document.getElementById('schedule');
+        scheduleId = Number(select.value);
+        studentEmail = emailInput;
+
+        let request = new XMLHttpRequest();
+        request.open('POST', '/api/bookings');
+        request.setRequestHeader('Content-Type', 'application/json');
+        let data = JSON.stringify({'id': scheduleId, 'student_email': studentEmail});
+        request.send(data);
+
+        request.addEventListener('load', () => {
+          if (request.status === 204) {
+            alert('Booked!');
+            window.location.reload();
+          } else {
+            alert(request.responseText);
+          }
+        })
+      } else {
+        alert(xhr.responseText);
+      }
     })
   })
 })
